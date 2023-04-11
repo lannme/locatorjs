@@ -262,11 +262,8 @@ export default function transformLocatorJsComponents(babel: Babel): {
           if (!fileStorage) {
             return;
           }
+          (fileStorage as any).expressionRaw = 1
           const dataCode = JSON.stringify(fileStorage);
-
-          const dataAst = parseExpression(dataCode, {
-            sourceType: "script",
-          });
 
           const insertCode = `(() => {
             if (typeof window !== "undefined") {
@@ -276,12 +273,6 @@ export default function transformLocatorJsComponents(babel: Babel): {
               )}"] = ${dataCode};
             }
           })()`;
-
-          // `function __bindLocatorExpression(id) {
-          //   return require("@locator/runtime").__bindLocatorExpression(${createFullPath(
-          //     fileStorage
-          //   )}, id);
-          // }`;
 
           const insertAst = parseExpression(insertCode, {
             sourceType: "script",
